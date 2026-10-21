@@ -28,24 +28,8 @@ export default function HomePage() {
   // Toast
   const [toast, setToast] = useState<string | null>(null);
 
-  // Auth
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-
   useEffect(() => {
     loadLibrary();
-
-    if (isSupabaseConfigured && supabase) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setUserEmail(session?.user?.email || null);
-      });
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        setUserEmail(session?.user?.email || null);
-        loadLibrary();
-      });
-
-      return () => subscription.unsubscribe();
-    }
   }, []);
 
   const showToast = (message: string) => {
@@ -142,15 +126,7 @@ export default function HomePage() {
       {/* Header */}
       <Navbar
         onOpenAddModal={() => setIsAddModalOpen(true)}
-        isCloudSynced={Boolean(isSupabaseConfigured && userEmail)}
-        userEmail={userEmail}
-        onSignOut={async () => {
-          if (supabase) {
-            await supabase.auth.signOut();
-            setUserEmail(null);
-            loadLibrary();
-          }
-        }}
+        isCloudSynced={Boolean(isSupabaseConfigured)}
       />
 
       {/* Main Content */}
