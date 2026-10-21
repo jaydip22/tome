@@ -3,50 +3,6 @@ import { supabase, isSupabaseConfigured } from './supabase/client';
 
 const LOCAL_STORAGE_KEY = 'books_app_personal_library';
 
-// Verified, high-res sample books with guaranteed public cover URLs
-const INITIAL_DEMO_BOOKS: Book[] = [
-  {
-    id: 'demo-1',
-    title: 'Atomic Habits',
-    author: 'James Clear',
-    cover_url: 'https://covers.openlibrary.org/b/id/12843460-L.jpg',
-    status: 'reading',
-    started_date: '2026-10',
-    pages: 320,
-    published_year: '2018',
-    description: 'An Easy & Proven Way to Build Good Habits & Break Bad Ones.',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-2',
-    title: 'Klara and the Sun',
-    author: 'Kazuo Ishiguro',
-    cover_url: 'https://covers.openlibrary.org/b/id/10522967-L.jpg',
-    status: 'finished',
-    started_date: '2026-08',
-    finished_date: '2026-09',
-    rating: 5,
-    reflections: 'A deeply touching perspective on love, consciousness, and loneliness through the eyes of an artificial friend. Ishiguro never fails to leave an emotional imprint.',
-    pages: 303,
-    published_year: '2021',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-3',
-    title: 'Project Hail Mary',
-    author: 'Andy Weir',
-    cover_url: 'https://covers.openlibrary.org/b/id/11186716-L.jpg',
-    status: 'wishlist',
-    pages: 496,
-    published_year: '2021',
-    description: 'A lone astronaut must save the earth from disaster in this incredible science-based adventure.',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
-
 export async function fetchBooks(): Promise<Book[]> {
   if (typeof window === 'undefined') return [];
 
@@ -73,14 +29,13 @@ export async function fetchBooks(): Promise<Book[]> {
   try {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!stored) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(INITIAL_DEMO_BOOKS));
-      return INITIAL_DEMO_BOOKS;
+      return [];
     }
     const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? parsed : INITIAL_DEMO_BOOKS;
+    return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
     console.error('Failed reading localStorage:', e);
-    return INITIAL_DEMO_BOOKS;
+    return [];
   }
 }
 
